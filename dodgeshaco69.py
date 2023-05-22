@@ -10,10 +10,10 @@ dodge_list = [35, 84]  # Shaco, Akali
 
 # List of champions and their counters
 counter_map = {
-    55: "pick Yasuo or dodge",   # Katarina
-    517: "pick Heimerdinger or dodge",  # Sylas
-    245: "Pick Kassadin or dodge",   # Ekko
-    122: "Pick Yorick or dodge"   # Darius 
+     55: "Yasuo",           # Katarina
+    517: "Heimerdinger",    # Sylas
+    245: "Kassadin",        # Ekko
+    122: "Yorick"           # Darius 
 }
 
 os.chdir("D:\Scripts\dodgeshaco")  # Replace "D:.." with the actual path where your script is located
@@ -82,7 +82,7 @@ async def champ_select(connection, _):
 
                     if counter_map.get(champId, None) is not None:
                         notification.notify(
-                            title=counter_map[champId], 
+                            title="Pick "+counter_map[champId], 
                             message="or dodge", 
                             timeout=30
                         )
