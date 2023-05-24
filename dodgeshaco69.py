@@ -6,20 +6,26 @@ from lcu_driver import Connector
 connector = Connector()
 
 # List of champions to dodge
-dodge_list = [35, 84]  # Shaco, Akali
+dodge_list = [35]  # Shaco, Annie, Fiddlesticks, Gragas, Kennen, Lulu, Rammus
+dodge_list_bot = [12]  # Alistar
 
 # List of champions and their counters
 counter_map = {
-     55: "Yasuo",           # Katarina
-    517: "Heimerdinger",    # Sylas
-    245: "Kassadin",        # Ekko
-    122: "Yorick"           # Darius 
+    55: "Yasuo",  # Katarina
+    517: "Heimerdinger",  # Sylas
+    245: "Kassadin",  # Ekko
+    122: "Yorick",  # Darius
 }
 
-os.chdir("D:\Scripts\dodgeshaco")  # Replace "D:.." with the actual path where your script is located
+os.chdir(
+    "D:\Scripts\dodgeshaco"
+)  # Replace "D:.." with the actual path where your script is located
 
 your_summoner_id = 0
 last_game_id = 0
+# 0 = top, 1 = jungle, 2 = mid, 3 = adc
+my_lane = 0
+
 
 # This function gets called when the LCU API is ready to be used
 @connector.ready
@@ -35,15 +41,17 @@ async def connect(connection):
     your_summoner_id = result["summonerId"]
 
     notification.notify(
-        title="dodgeshaco", 
-        message=f"Hey {result['displayName']}. The script is ready.", 
-        timeout=5
+        title="dodgeshaco",
+        message=f"Hey {result['displayName']}. The script is ready.",
+        timeout=5,
     )
+
 
 # This function gets called when the LCU client has been closed
 @connector.close
 async def disconnect(_):
     print("The client has been closed!")
+
 
 # This function gets called when the session state has changed
 @connector.ws.register("/lol-champ-select/v1/session", event_types=("UPDATE",))
@@ -61,6 +69,7 @@ async def champ_select(connection, _):
         searchBanByPosition(result)
 
     global your_summoner_id
+    global my_lane
 
     if result["actions"] is not None:
         a = result["actions"]
@@ -72,51 +81,45 @@ async def champ_select(connection, _):
                     and not c["isInProgress"]
                 ):
                     champId = c["championId"]
-
                     if champId in dodge_list:
                         notification.notify(
-                            title="ALARM!", 
-                            message="Dodge!", 
-                            timeout=30
+                            title="ALARM!", message="Dodge!", timeout=30
                         )
+                    if my_lane == 3:
+                        if champId in dodge_list_bot:
+                            notification.notify(
+                                title="ALARM!", message="Dodge!", timeout=30
+                            )
 
                     if counter_map.get(champId, None) is not None:
                         notification.notify(
-                            title="Pick "+counter_map[champId], 
-                            message="or dodge", 
-                            timeout=30
+                            title="Pick " + counter_map[champId], message="or dodge", timeout=30                      
                         )
+
 
 # This function gets called to check the ban by position
 def searchBanByPosition(result):
+    global my_lane
     for ich in result["myTeam"]:
         if ich["summonerId"] == your_summoner_id:
             if ich["assignedPosition"] == "middle":
+                my_lane = 2
                 notification.notify(
-                    title="Bann Akali", 
-                    message="Bann Akali", 
-                    timeout=5
-                )
+                    title="Bann Akali", message="Bann Akali", timeout=5)
             elif ich["assignedPosition"] == "top":
+                my_lane = 0
                 notification.notify(
-                    title="Bann Darius", 
-                    message="Bann Darius", 
-                    timeout=5
+                    title="Bann Darius", message="Bann Darius", timeout=5
                 )
             elif ich["assignedPosition"] == "jungle":
+                my_lane = 1
                 notification.notify(
-                    title="Bann Shaco", 
-                    message="Bann Shaco", 
-                    timeout=5
-                )
+                    title="Bann Shaco", message="Bann Shaco", timeout=5)
             else:
+                my_lane = 3
                 notification.notify(
-                    title="Bann Kaisa", 
-                    message="Bann Kaisa", 
-                    timeout=5
+                    title="Bann Samira", message="Bann Samira", timeout=5
                 )
-
 
 
 connector.start()
-
