@@ -7,7 +7,7 @@ connector = Connector()
 
 # List of champions to dodge
 dodge_list = [35, 1, 9, 79, 85, 117, 33, 28]  # Shaco, Annie, Fiddlesticks, Gragas, Kennen, Lulu, Rammus, Eve
-dodge_list_bot = [12]  # Alistar
+dodge_list_bot = [12, 89]  # Alistar, Leona
 
 # List of champions and their counters
 counter_map = {
@@ -118,7 +118,7 @@ def searchBanByPosition(result):
             else:
                 my_lane = 3
                 notification.notify(
-                    title="Bann Samira", message="Bann Samira", timeout=5
+                    title="Bann Lulu", message="Bann Lulu", timeout=5
                 )
 
 
