@@ -6,7 +6,7 @@ from lcu_driver import Connector
 connector = Connector()
 
 # List of champions to dodge
-dodge_list = [35, 1, 9, 79, 85, 117, 33, 28]  # Shaco, Annie, Fiddlesticks, Gragas, Kennen, Lulu, Rammus, Eve
+dodge_list = [35, 1, 9, 79, 85, 117, 33, 28, 10, 32,80, 56]  # Shaco, Annie, Fiddlesticks, Gragas, Kennen, Lulu, Rammus, Eve, Kayle, Amumu, Pantheon, Nocturne
 dodge_list_bot = [12, 89]  # Alistar, Leona
 
 # List of champions and their counters
